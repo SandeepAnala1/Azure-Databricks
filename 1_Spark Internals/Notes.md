@@ -146,7 +146,9 @@ A command line tool that allows you to submit the Spark application to the clust
 ----------------------------------------------------------------------------
 
 # In detail explanantion - Spark Cluster & Runtime Architecture
-﻿## Spark Cluster and Runtime Architecture
+
+- Spark Cluster and Runtime Architecture
+ 
 Driver- It is the container in which the main method of a spark application is executed. The driver converts your Spark application into one or more Spark jobs. It then transforms each job into a DAG (Spark's execution plan), where each node within a DAG could be single or multiple Spark stages.
 As soon as the Spark Application is submitted, cluster Manager creates a Application Master Container and allocates the driver memory and cores.
 
@@ -213,25 +215,55 @@ The JVM allows Spark to run on any machine that has a JVM installed, providing a
 
 The JVM ensures that Spark applications can run consistently across different machines and environments, handling the execution of tasks and management of resources in real-time.
 
+-----------------------------------------------------------------------------------------
+
+# Memory Management in Spark - Important
+
+**Container(Master/Executor)** - Both have Overhead Memory & JVM Heap Memory
+
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/fb984907-31cd-48a9-8ab3-37c68c7a642e)
+
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/e3da637a-b1e0-4d54-8400-b65d0abda65f)
+
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/85ad6631-dcac-4704-9155-5e6a0dd512d4)
+
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/139dc83d-cfb1-471d-9199-3c745f0c83df)
+
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/68ce8fbb-bb3e-44a9-b6a7-90dc0468ea22)
+
+### Question 1: 10 GB File - How Many Executors Needed?
+
+Given:
+- File size: 10 GB
+- File size in MB: \( 10 \times 1024 \text{ MB} = 10240 \text{ MB} \)
+- Partition size: 128 MB
+
+Calculation:
+- Total Partitions/Total Tasks/Ideal Total Cores:
+  \( \frac{10240 \text{ MB}}{128 \text{ MB}} = 80 \)
+
+So, you would need 80 partitions/tasks/cores to process the 10 GB file efficiently.
+
+But how many executors we need? 
+For each executors ideal number of cores is (5)
+
+- 80/5 = 16. We need 16 executors
+- If cores and partition size is given then 1024 * (GB)/partition size = x ----------> x/cores == we get executors
+
+﻿
+
+- Questions 1: 10 GB File how many executors you would need.
+- Questions 2: -Let's say we have a 1 TB file stored in data lake and must do some filtering of data; how many tasks will run.
+  1) Find total tasks.
+  2) Ideal Number of Executors
+  3) Find Total tasks which will run in parallel if 50 executors (5 cores, 21 GB RAM)
+  4) Ideal time spark application will take to complete if 256 MB data is processed in 20 secs.
+  5)  Will it cause an out of memory error? If partitions size is 1.5 GB
+
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/864a898a-b098-4893-9cd7-a98c0db319a4)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/73dba861-cf56-432d-a143-01483b80c3d2)
 
 
 
