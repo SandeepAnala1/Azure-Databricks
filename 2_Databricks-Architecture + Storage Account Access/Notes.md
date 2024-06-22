@@ -44,8 +44,16 @@ engineering and data science tools, making it easier to work with an ecosystem o
 
 ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/9ebe62bc-96ee-468b-8b06-417d66233fba)
 
+### Multi Node vs Single Node
+- More Virtual Machines & single Virtual Machine
 
-# 55:33 
+### Databricks Runtime
+- It has all the libraries to run your spark cluster & any additional performance tuning + any enhancement done for data bricks
+
+### Worker type
+- It has Executor memory, cores
+
+
 
 
 
