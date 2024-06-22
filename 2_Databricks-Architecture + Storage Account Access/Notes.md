@@ -44,8 +44,11 @@ engineering and data science tools, making it easier to work with an ecosystem o
 
 ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/9ebe62bc-96ee-468b-8b06-417d66233fba)
 
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/6509806d-cd55-4dc1-a250-1996814fe532)
+
 ### Multi Node vs Single Node
 - More Virtual Machines & single Virtual Machine
+- In Multi node, you'll be having both Driver & Worker nodes, but in single node you can find one
 
 ### Databricks Runtime
 - It has all the libraries to run your spark cluster & any additional performance tuning + any enhancement done for data bricks
@@ -53,7 +56,34 @@ engineering and data science tools, making it easier to work with an ecosystem o
 ### Worker type
 - It has Executor memory, cores
 
+> Interview Question 1: Generally for Big Data Processing, 11-25 worker nodes are used with 128 GB RAM each + 4 cores. Question may be asked like what is the cluster size you have used
+> Interview Question 2: What kind of clusters are in your project? All purpose cluster | Job cluster
 
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/7b574685-5ddb-421b-a607-5e251effbd28)
+
+- If this is not checked, our cluster will keep on running and it will consume our units.
+- Once you click on create compute, Virtual Machines start getting created for you & Databricks Cluster Manager will allocate driver and worker nodes. So it requests the Azure Resurce Manager for the required VMS & it also access the blob storage
+
+- **Hive Metastore**: It is a catalog to store the metadata of a table or database
+    > Metadata: Information about your data Eg: data types, schema etc
+
+### How do you access your storage account outside Azure??
+1) Service Principle - Only Authentication
+2) Access Key  -- Both Authentication & Authorization -- By default it gives you admin access
+3) SAS key -- Both Authentication & Authorization -- It limits the access
+4) Managed Identity
+
+- **Authentication**: The process of verifying the identity of a user or system. Simply it's validating your credentials.
+- **Authorization**: The process of determining the permissions or access levels granted to a user or system.
+
+# Hand's ON
+- Created ADLS Gen 2 Storage account with 3 containers raw, processed & presentation
+  
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/6649d115-8fa0-4e6e-9a6e-80662d0dcfe7)
+
+1) Accessing it through Access key
+  - Security + Networking -> Access Key
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/8797e7f0-477e-4893-b547-99fba573149b)
 
 
 
