@@ -81,9 +81,108 @@ engineering and data science tools, making it easier to work with an ecosystem o
   
 ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/6649d115-8fa0-4e6e-9a6e-80662d0dcfe7)
 
-1) Accessing it through Access key
+## 1) Accessing it through Access key
   - Security + Networking -> Access Key
   ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/8797e7f0-477e-4893-b547-99fba573149b)
+
+  `dbutils` is a utility library provided by Databricks to facilitate various common tasks when working within a Databricks notebook environment. It provides a range of functionalities to simplify workflows, manage files, and interact with Databricks components. Here's a brief overview of its main modules and functions:
+  
+  ### Key Modules and Functions of `dbutils`
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/207a1b16-eee0-46a5-8af0-51bf8c5e23c4)
+
+  - **File System Utilities (`dbutils.fs`)**:
+     - **Purpose**: To interact with the Databricks File System (DBFS).
+     - **Common Functions**:
+       - `ls(path)`: Lists files and directories in the specified path.
+       - `mkdirs(path)`: Creates a directory at the specified path.
+       - `rm(path, recurse)`: Deletes a file or directory at the specified path. If `recurse` is true, it deletes the directory and all its contents.
+       - `cp(src, dst, recurse)`: Copies a file or directory from source to destination. If `recurse` is true, it copies directories recursively.
+       - `mv(src, dst)`: Moves a file or directory from source to destination.
+
+`abfss` stands for Azure Blob File System Secure, which is a URI scheme used to access Azure Data Lake Storage Gen2 in a secure manner. It is a secure extension of the `abfs` (Azure Blob File System) scheme, providing encrypted connections (via HTTPS) to Azure Data Lake Storage Gen2.
+
+### Breakdown of the URI
+
+The format `abfss://<container-name>@<storage-account-name>.dfs.core.windows.net/` can be broken down as follows:
+
+- `abfss://`: Indicates that the connection uses Azure Blob File System Secure (encrypted connection).
+- `<container-name>`: The name of the container within the Azure Data Lake Storage Gen2 account.
+- `<storage-account-name>`: The name of the Azure Storage account.
+- `.dfs.core.windows.net`: The domain for accessing Azure Data Lake Storage Gen2.
+
+Given a URI: `abfss://mycontainer@mystorageaccount.dfs.core.windows.net/`
+
+- `mycontainer`: The container name within the storage account.
+- `mystorageaccount`: The storage account name.
+- `dfs.core.windows.net`: Indicates the endpoint for Azure Data Lake Storage Gen2.
+
+### Usage in Databricks
+In Databricks, you can use `abfss` URIs to mount and access data stored in Azure Data Lake Storage Gen2. For example, when configuring access to a storage account, you might use the `abfss` URI to specify the source path for data processing or analysis tasks.
+- So here you need Access key & storage account name to retrieve the data from the specific container
+
+You can find code here
+----------------------------------------------------------
+
+## 2) SAS Key
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/57fe6fd7-ce83-43e9-a8f3-166fefe1a163)
+
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/02fc83f3-76b3-42fd-83bc-1278290ff4aa)
+
+You can find code here
+----------------------------------------------------------
+
+## 3) Service Principle
+- What is SP? -- It's an identity managed by customer which can be used for access
+- To create it --> Microsoft Entra ID --> App registrations --> New --> Register
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/bfb8fab7-6829-485a-8718-8fb98402107e)
+
+- It has Tenant ID & Client ID
+- **Client ID**: The unique identifier assigned to an Azure Service Principal to represent it during authentication.
+- **Tenant ID**: The unique identifier of the Azure Active Directory (AAD) instance (tenant) where the Service Principal is registered.
+- Now we need to create secrets
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/21790876-0096-4284-bd6c-dd6a4624aade)
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/9a687986-78a7-4254-b9eb-9f5627c118f6)
+
+- In Client secret, we need to add the value here
+
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/bbb8228e-b18e-4e49-b7e3-6796c8a12958)
+The rest of the Hands-on you can find in this file
+- Even after doing all this it fails to retrieve here
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/4c98775e-bb13-4607-97c4-00f50c28a46b)
+- Because Service principle is just authentication, authorization we have to provide from IAM
+
+-----------------------------------------------------------
+
+## 4) IAM
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/09696b24-5f98-4cbb-8468-a4cf3ed4e5dd)
+
+- From SA we need to add the Role Assignments
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/c6607845-2796-469d-8a6b-9fbe44dd0bf7)
+
+- From here we need to choose Storage BLOB Data Contributor
+
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/cd1d5d3f-7759-4ff6-a373-926daea0fda4)
+
+- Now it worked
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/3dc04f80-9a20-469c-8210-04ce978a6e49)
+
+You can find code here
+
+------------------------------------------------------------
+
+## 5) Mounting
+- When you have multiple containers, we dont do this in each session right? Then moutning helps
+- 
+
+
+You can find code here
+
+
+
+
+
+
+
 
 
 
