@@ -171,8 +171,13 @@ You can find code here
 ------------------------------------------------------------
 
 ## 5) Mounting
-- When you have multiple containers, we dont do this in each session right? Then moutning helps
-- 
+- We have 2 problems now, we we have multiple containers and when it required seperate session, we need to provide credentials again and again
+- And also we need to provide full URL for storage account which is this `abfss://mycontainer@mystorageaccount.dfs.core.windows.net/`
+- To over come this we did mounting and you can find code with below link
+
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/7b22c647-e87a-4ae3-b8da-cb30bc6c385e)
+
+- This can be used outside this session and it will work
 
 
 You can find code here
