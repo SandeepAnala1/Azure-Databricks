@@ -120,7 +120,7 @@ Given a URI: `abfss://mycontainer@mystorageaccount.dfs.core.windows.net/`
 In Databricks, you can use `abfss` URIs to mount and access data stored in Azure Data Lake Storage Gen2. For example, when configuring access to a storage account, you might use the `abfss` URI to specify the source path for data processing or analysis tasks.
 - So here you need Access key & storage account name to retrieve the data from the specific container
 
-You can find code here
+You can find code [here](https://github.com/SandeepAnala1/Azure-Databricks/blob/main/2_Databricks-Architecture%20%2B%20Storage%20Account%20Access/1.Access%20Key.ipynb)
 ----------------------------------------------------------
 
 ## 2) SAS Key
@@ -128,7 +128,7 @@ You can find code here
 
   ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/02fc83f3-76b3-42fd-83bc-1278290ff4aa)
 
-You can find code here
+You can find code [here](https://github.com/SandeepAnala1/Azure-Databricks/blob/main/2_Databricks-Architecture%20%2B%20Storage%20Account%20Access/2.SAS%20Key.ipynb)
 ----------------------------------------------------------
 
 ## 3) Service Principle
@@ -166,7 +166,7 @@ The rest of the Hands-on you can find in this file
 - Now it worked
   ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/3dc04f80-9a20-469c-8210-04ce978a6e49)
 
-You can find code here
+You can find code [here](https://github.com/SandeepAnala1/Azure-Databricks/blob/main/2_Databricks-Architecture%20%2B%20Storage%20Account%20Access/3.Service%20Principle.ipynb)
 
 ------------------------------------------------------------
 
@@ -180,8 +180,7 @@ You can find code here
 - This can be used outside this session and it will work
 
 
-You can find code here
-
+You can find code [here](https://github.com/SandeepAnala1/Azure-Databricks/blob/main/2_Databricks-Architecture%20%2B%20Storage%20Account%20Access/4.Mounting.ipynb)
 
 
 
