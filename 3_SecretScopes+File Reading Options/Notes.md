@@ -71,7 +71,7 @@ Outside of Azure, **Service Principals** are generally better because:
 
 ## File Reading Options
 
-### Resilient Distributed Dataset (RDD) in PySpark
+# Resilient Distributed Dataset (RDD) in PySpark
 
 - **Concept (PySpark)**:
   - RDDs are fundamental data structures in Apache Spark, representing immutable, distributed collections of objects processed in parallel across a cluster.
@@ -101,8 +101,6 @@ Outside of Azure, **Service Principals** are generally better because:
 
 RDDs are the distributed data structures that enable parallel processing in Spark, and PySpark leverages JVM through Py4j for execution. The process involves distributing both code and data across executor JVMs managed by the Application Driver.
 
-Find the handon here
-
 ------------------------------------------
 
 # Job, Stage, Task
@@ -113,38 +111,111 @@ Find the handon here
 
 -----------------------------------------
 
-- Here it is reading the file & loading it into the memory
-![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/18346b93-501c-40af-b65f-2a86b9f1696e)
+  - Here it is reading the file & loading it into the memory
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/18346b93-501c-40af-b65f-2a86b9f1696e)
+  
+  - Dataframes are the logical table inside the memory gets created as soon as we read the file
+  
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/281fbd4b-a5db-41a7-9f2b-55e3ab3e922e)
+  
+  - The partitioned data are send to worker nodes
+  
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/d045e3a8-9793-41f0-a4fe-42ed254766b1)
+  
+  - We should avoid using Inferschema as it creates other job and it will take time
+  
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/a87b3220-1eff-46fc-bb9d-545ab637cc72)
+  
+  - The reason, it is not displaying any output is because, the data is still present in the worker node, to bring it back to driver node we need to perform action
+  
+  - In PySpark, transformations like `map` are lazily evaluated, meaning that they do not immediately execute when called. Instead, they create a lineage of operations to be performed when an action is triggered. The action in your code should be something like `collect`, `count`, `show` or `take`, which forces the computation to be executed.
+  
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/3e3b7ef1-684d-41a2-9d68-578c5014d764)
+  
+  In PySpark, `StructType` and `StructField` are used to define the schema for DataFrames. They allow you to specify the structure of your data, including column names, data types, and whether the columns can contain null values.
+  
+  ### StructType
+  
+  **Definition**: `StructType` is a collection of `StructField` objects that defines the schema of a DataFrame. It is essentially a list of fields, where each field represents a column.
+  
+  ### StructField
+  
+  **Definition**: `StructField` represents a single column in a DataFrame. It includes:
+  
+  ![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/2b6a82d6-a40b-4883-9feb-9c52a3a9d330)
 
-- Dataframes are the logical table inside the memory gets created as soon as we read the file
+When reading files into a DataFrame in PySpark, you can specify how Spark should handle malformed data using the `mode` option. The three common modes are `PERMISSIVE`, `FAILFAST`, and `DROPMALFORMED`.
 
-![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/281fbd4b-a5db-41a7-9f2b-55e3ab3e922e)
+  ## 1. PERMISSIVE
+  
+  **Definition**: The `PERMISSIVE` mode is the default mode. In this mode, Spark tries to parse all the records, even if some of them are malformed.
+  
+  **Behavior**:
+  - When a row is malformed, Spark sets all the columns to `null` and puts the malformed data into a separate field called `_corrupt_record`.
+  - This mode ensures that all data is read and included in the DataFrame, even if some rows are corrupted.
+  
+  **Example**:
+  ```python
+  df = spark.read.option("mode", "PERMISSIVE").csv("path/to/file.csv")
+  ```
+  
+  ## 2. FAILFAST
+  
+  **Definition**: The `FAILFAST` mode stops processing as soon as it encounters any malformed row.
+  
+  **Behavior**:
+  - If Spark encounters a malformed row, it throws an exception and stops reading the file.
+  - This mode is useful when you want to ensure data quality and do not want to proceed with corrupted data.
+  
+  **Example**:
+  ```python
+  df = spark.read.option("mode", "FAILFAST").csv("path/to/file.csv")
+  ```
+  
+  ## 3. DROPMALFORMED
+  
+  **Definition**: The `DROPMALFORMED` mode drops any rows that contain malformed data.
+  
+  **Behavior**:
+  - Any row that does not conform to the schema is ignored and not included in the DataFrame.
+  - This mode helps in keeping only the well-formed data, but it might lead to data loss if there are many malformed rows.
+  
+  **Example**:
+  ```python
+  df = spark.read.option("mode", "DROPMALFORMED").csv("path/to/file.csv")
+  ```
+  ### Summary
+  
+  - **PERMISSIVE**: Tries to read all rows, marking malformed ones with `null` and placing malformed data in `_corrupt_record`.
+  - **FAILFAST**: Stops reading and throws an error when a malformed row is encountered.
+  - **DROPMALFORMED**: Ignores and drops malformed rows, keeping only well-formed data in the DataFrame.
 
-- The partitioned data are send to worker nodes
 
-![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/d045e3a8-9793-41f0-a4fe-42ed254766b1)
 
-- We should avoid using Inferschema as it creates other job and it will take time
+Find the handson [here](https://github.com/SandeepAnala1/Azure-Databricks/blob/main/3_SecretScopes%2BFile%20Reading%20Options/Files/1.File%20Reading%20Options.py)
 
-![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/a87b3220-1eff-46fc-bb9d-545ab637cc72)
 
-- The reason, it is not displaying any output is because, the data is still present in the worker node, to bring it back to driver node we need to perform action
 
-- In PySpark, transformations like `map` are lazily evaluated, meaning that they do not immediately execute when called. Instead, they create a lineage of operations to be performed when an action is triggered. The action in your code should be something like `collect`, `count`, `show` or `take`, which forces the computation to be executed.
 
-![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/3e3b7ef1-684d-41a2-9d68-578c5014d764)
 
-In PySpark, `StructType` and `StructField` are used to define the schema for DataFrames. They allow you to specify the structure of your data, including column names, data types, and whether the columns can contain null values.
 
-### StructType
 
-**Definition**: `StructType` is a collection of `StructField` objects that defines the schema of a DataFrame. It is essentially a list of fields, where each field represents a column.
 
-### StructField
 
-**Definition**: `StructField` represents a single column in a DataFrame. It includes:
 
-![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/2b6a82d6-a40b-4883-9feb-9c52a3a9d330)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
