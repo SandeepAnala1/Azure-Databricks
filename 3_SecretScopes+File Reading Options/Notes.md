@@ -105,7 +105,11 @@ Find the handon here
 
 ------------------------------------------
 
+# Job, Stage, Task
 
+- Job: Any Action --> Any code which brings the data back to driver is called an action
+- Stage: Any Wide Transformation
+- Task: Any Narrow Transformation
 
 
 
