@@ -1,3 +1,4 @@
+
 ### Interesting Fact
 - Even if you are working on Azure Databricks, you can access the storage account of aws through mounting, because it just needs Client ID, Tenant ID, Credentials(secret)[Service Principle], container name & storage account name.
 
@@ -70,11 +71,39 @@ Outside of Azure, **Service Principals** are generally better because:
 
 ## File Reading Options
 
-### RDD
+### Resilient Distributed Dataset (RDD) in PySpark
 
+- **Concept (PySpark)**:
+  - RDDs are fundamental data structures in Apache Spark, representing immutable, distributed collections of objects processed in parallel across a cluster.
 
+- **Application Submission Process**:
+  - When you submit an application to Spark, the following steps occur:
 
+1. **Application Master Container Allocation**:
+   - The Application Master Container is allocated to manage the application lifecycle.
 
+2. **Launching the Main Method (PySpark Driver)**:
+   - The main method for the application is launched within this container.
+
+3. **Python Code Conversion**:
+   - PySpark converts Python code into JVM bytecode using the Py4j library, as the core logic of Spark is implemented in Java.
+
+4. **Application Driver**:
+   - The JVM launched by the driver is referred to as the Application Driver.
+   - The Application Driver divides the code and data, requesting resources from the Cluster Manager.
+
+5. **Executor Containers and JVMs**:
+   - Executor containers are then launched, each with its own JVM instance.
+   - The Application Driver distributes data to these JVMs.
+
+6. **RDD Data Type**:
+   - The distributed data is represented as RDDs, hence the term Resilient Distributed Dataset.
+
+RDDs are the distributed data structures that enable parallel processing in Spark, and PySpark leverages JVM through Py4j for execution. The process involves distributing both code and data across executor JVMs managed by the Application Driver.
+
+Find the handon here
+
+------------------------------------------
 
 
 
