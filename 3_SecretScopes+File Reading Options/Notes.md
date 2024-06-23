@@ -108,24 +108,43 @@ Find the handon here
 # Job, Stage, Task
 
 - Job: Any Action --> Any code which brings the data back to driver is called an action
-- Stage: Any Wide Transformation
-- Task: Any Narrow Transformation
+- Stage: Any Wide Transformation -- These run in Sequential
+- Task: Any Narrow Transformation -- These run in parallel
 
+-----------------------------------------
 
+- Here it is reading the file & loading it into the memory
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/18346b93-501c-40af-b65f-2a86b9f1696e)
 
+- Dataframes are the logical table inside the memory gets created as soon as we read the file
 
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/281fbd4b-a5db-41a7-9f2b-55e3ab3e922e)
 
+- The partitioned data are send to worker nodes
 
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/d045e3a8-9793-41f0-a4fe-42ed254766b1)
 
+- We should avoid using Inferschema as it creates other job and it will take time
 
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/a87b3220-1eff-46fc-bb9d-545ab637cc72)
 
+- The reason, it is not displaying any output is because, the data is still present in the worker node, to bring it back to driver node we need to perform action
 
+- In PySpark, transformations like `map` are lazily evaluated, meaning that they do not immediately execute when called. Instead, they create a lineage of operations to be performed when an action is triggered. The action in your code should be something like `collect`, `count`, `show` or `take`, which forces the computation to be executed.
 
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/3e3b7ef1-684d-41a2-9d68-578c5014d764)
 
+In PySpark, `StructType` and `StructField` are used to define the schema for DataFrames. They allow you to specify the structure of your data, including column names, data types, and whether the columns can contain null values.
 
+### StructType
 
+**Definition**: `StructType` is a collection of `StructField` objects that defines the schema of a DataFrame. It is essentially a list of fields, where each field represents a column.
 
+### StructField
 
+**Definition**: `StructField` represents a single column in a DataFrame. It includes:
+
+![image](https://github.com/SandeepAnala1/Azure-Databricks/assets/163712602/2b6a82d6-a40b-4883-9feb-9c52a3a9d330)
 
 
 
