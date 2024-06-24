@@ -1,3 +1,14 @@
+# Index
+
+- [Why Spark has emerged?](#why-spark-has-emerged)
+- [Evolution of Hadoop](#evolution-of-hadoop)
+- [Apache Spark Introduction](#apache-spark-introduction)
+- [Apache Spark Architecture](#apache-spark-architecture)
+- [Driver & Worker nodes](#driver--worker-nodes)
+- [Memory Management in Spark](#memory-management-in-spark)
+- [Cluster Deploy Modes](#cluster-deploy-modes)
+
+
 # Why Spark has emerged?
 - Back in 2004, we just have traditional databases which has only structured data, as the data started growing there is a need for faster processing
 - The idea of "big data" began to gain traction as organizations recognized the limitations of traditional RDBMS systems in handling massive data volumes and new data types.
