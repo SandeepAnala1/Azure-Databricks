@@ -1,5 +1,5 @@
 # Index
-- [Magic commands](https://github.com/SandeepAnala1/Azure-Databricks/edit/main/4_Narrow%20Transformations/Notes.md#magic-commands)
+- [Magic commands] (https://github.com/SandeepAnala1/Azure-Databricks/edit/main/4_Narrow%20Transformations/Notes.md#magic-commands)
 - [Creation of dataframes from static data]()
 - [Select in pyspark]()
 - [Select Expression]()
