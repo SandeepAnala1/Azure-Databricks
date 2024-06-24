@@ -1,5 +1,18 @@
 ### If you gone through spark internals, you can find so much information and calculations on memories in spark submit. During 2014, people used to submit their jobs by spark submit. So, Databricks came with the managed service where all the struggle of spark submit i.e., calculating the executor memory, driver memory for each job is taken care by Databricks itself.
 
+# Index
+
+- [Why Databricks?](#why-databricks)
+- [Azure Databricks Architecture](#azure-databricks-architecture)
+- [Compute: Cluster](#compute-cluster)
+- [Hand's ON](#hands-on)
+  - [1) Accessing it through Access key](#1-accessing-it-through-access-key)
+  - [2) SAS Key](#2-sas-key)
+  - [3) Service Principle](#3-service-principle)
+  - [4) IAM](#4-iam)
+  - [5) Mounting](#5-mounting)
+
+
 # Why Databricks?
 ﻿
 - Databricks is a cloud-based platform for big data analytics that is often used with Apache Spark, which is a popular open-source, distributed data processing framework. While Databricks incorporates Apache Spark, it provides several benefits and additional features that can make it more attractive for certain use cases and organizations.
