@@ -1,3 +1,19 @@
+# Index
+
+- [Interesting Fact](#interesting-fact)
+- [Which one is better and why?](#which-one-is-better-and-why)
+- [Secret Scopes](#secret-scopes)
+- [Pyspark](#pyspark)
+  - [File Reading Options](#file-reading-options)
+  - [Resilient Distributed Dataset (RDD) in PySpark](#resilient-distributed-dataset-rdd-in-pyspark)
+  - [Job, Stage, Task](#job-stage-task)
+  - [StructType](#structtype)
+  - [StructField](#structfield)
+  - [PERMISSIVE Mode](#1-permissive)
+  - [FAILFAST Mode](#2-failfast)
+  - [DROPMALFORMED Mode](#3-dropmalformed)
+  - [Summary](#summary)
+  - [Find the handson here](#find-the-handson-here)
 
 ### Interesting Fact
 - Even if you are working on Azure Databricks, you can access the storage account of aws through mounting, because it just needs Client ID, Tenant ID, Credentials(secret)[Service Principle], container name & storage account name.
