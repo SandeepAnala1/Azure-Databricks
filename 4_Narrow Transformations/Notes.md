@@ -1,17 +1,3 @@
-# Index
-- [Magic commands] (https://github.com/SandeepAnala1/Azure-Databricks/edit/main/4_Narrow%20Transformations/Notes.md#magic-commands)
-- [Creation of dataframes from static data]()
-- [Select in pyspark]()
-- [Select Expression]()
-- [Filter Transformation]()
-- [Drop]()
-- [dropDuplicates]()
-- [Fillna]()
-- [Dropna]()
-- [WithColumn]()
-- [withColumnRenamed]()
-
-
 # Magic commands
 - If you are writing a python code and wanted to execute a sql code, you can perform below code and perform <br>
 
