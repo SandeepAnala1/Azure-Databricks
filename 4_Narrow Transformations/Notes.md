@@ -1,3 +1,20 @@
+# Index
+
+- [Magic commands](#magic-commands)
+- [Creation of dataframes from static data](#creation-of-dataframes-from-static-data)
+- [Select in PySpark](#select-in-pyspark)
+- [Select Expression](#select-expression)
+- [Filter Transformation](#filter-transformation)
+- [Drop](#drop)
+- [dropDuplicates](#dropduplicates)
+- [Fillna](#fillna)
+- [Dropna](#dropna)
+- [withColumn](#withcolumn)
+- [withColumnRenamed](#withcolumnrenamed)
+
+
+
+
 # Magic commands
 - If you are writing a python code and wanted to execute a sql code, you can perform below code and perform <br>
 
