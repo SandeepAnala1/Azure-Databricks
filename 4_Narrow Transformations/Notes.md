@@ -257,7 +257,7 @@ df_new.show()
 -------------------------------------------
 
 # Explode & Split
-
+- When you have array inside the data, you need to explode it
 
 
 
