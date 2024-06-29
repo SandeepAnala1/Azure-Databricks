@@ -258,8 +258,80 @@ df_new.show()
 
 # Explode & Split
 - When you have array inside the data, you need to explode it
+- `explode`: This function is used to transform an array column into multiple rows, one for each element in the array.
+
+```python
+from pyspark.sql.functions import explode
+# Sample data with an array of structs
+data = [("Alice", [{"subject": "Math", "score": 90}, {"subject": "English", "score": 85}]),
+        ("Bob", [{"subject": "Math", "score": 88}, {"subject": "English", "score": 92}]),
+        ("Charlie", [{"subject": "Math", "score": 78}]),
+        ("David", [{"subject": "Math", "score": 95}, {"subject": "English", "score": 89}])]
+schema = ["name", "subjects_and_scores"]
+df.show(truncate=False)
+```
+| Name    | Subjects and Scores                                                |
+|---------|--------------------------------------------------------------------|
+| Alice   | [{score -> 90, subject -> Math}, {score -> 85, subject -> English}] |
+| Bob     | [{score -> 88, subject -> Math}, {score -> 92, subject -> English}] |
+| Charlie | [{score -> 78, subject -> Math}]                                    |
+| David   | [{score -> 95, subject -> Math}, {score -> 89, subject -> English}] |
+
+```python
+exploded_df = df.select("name",explode("subjects_and_scores").alias("subject_score"))
+exploded_df.show(truncate=False)
+```
+| Name    | Subject and Score                    |
+|---------|--------------------------------------|
+| Alice   | {score -> 90, subject -> Math}       |
+| Alice   | {score -> 85, subject -> English}    |
+| Bob     | {score -> 88, subject -> Math}       |
+| Bob     | {score -> 92, subject -> English}    |
+| Charlie | {score -> 78, subject -> Math}       |
+| David   | {score -> 95, subject -> Math}       |
+| David   | {score -> 89, subject -> English}    |
 
 
+- `split`: This function is used to split the values of a column based on a specified delimiter.
+
+```python
+# Sample data with a string column
+data = [("Alice", "Math,English,History"),
+        ("Bob", "Physics,Chemistry"),
+        ("Charlie", "Biology"),
+        ("David", "Math,Physics,Chemistry,History")]
+# Define the schema
+schema = ["name", "subjects"]
+
+df=spark.createDataFrame(data,schema)
+df.show(truncate=False)
+```
+| Name    | Subjects                      |
+|---------|-------------------------------|
+| Alice   | Math, English, History        |
+| Bob     | Physics, Chemistry            |
+| Charlie | Biology                       |
+| David   | Math, Physics, Chemistry, History |
+
+
+```python
+from pyspark.sql.functions import split
+df2=df.select("name",split("subjects",","))
+df3=df2.select("name",explode("split(subjects, ,, -1)"))
+df3.show(truncate=False)
+```
+| Name    | Col       |
+|---------|-----------|
+| Alice   | Math      |
+| Alice   | English   |
+| Alice   | History   |
+| Bob     | Physics   |
+| Bob     | Chemistry |
+| Charlie | Biology   |
+| David   | Math      |
+| David   | Physics   |
+| David   | Chemistry |
+| David   | History   |
 
 
 
