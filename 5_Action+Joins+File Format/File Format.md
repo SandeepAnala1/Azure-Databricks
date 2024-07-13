@@ -224,3 +224,13 @@ df = spark.read.schema(knownSchema).csv("path/to/csvfile.csv")
 - Requires one database connection per partition.
 - Has the potential to overwhelm the database.
 - Requires specification of a stride to properly balance partitions.
+
+------------------------------------------------------------------------
+
+# Interview question
+
+1) Arrange these in the order of performance
+![image](https://github.com/user-attachments/assets/26967689-04bc-4343-9963-4ca1d72fd69a)
+
+D->B->A->C
+
