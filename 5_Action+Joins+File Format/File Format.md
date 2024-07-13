@@ -184,7 +184,7 @@ df = spark.read.schema(knownSchema).csv("path/to/csvfile.csv")
 
 -------------------------------------------------------
 
-# Ashok's note
+# Ashok's notes
 
 ##Reading CSV
 - `spark.read.csv(..)`
