@@ -218,6 +218,55 @@ In these examples:
 The Hive metastore in Databricks plays a crucial role in managing metadata, enabling schema evolution, optimizing queries, and ensuring interoperability with other data processing tools. Its integration with Spark SQL and the Databricks environment provides a powerful and flexible platform for data engineering tasks.
 
 
+# With & without Unity Catalog
+
+the key concepts and differences between using Hive Metastore and Unity Catalog in Databricks:
+
+### Without Unity Catalog
+1. **Hive Metastore (Catalog)**:
+   - The Hive Metastore acts as the central catalog for managing metadata in Databricks.
+   - It stores information about databases, schemas, tables, and views.
+
+2. **Database (Schema)**:
+   - A logical grouping of tables and views within the Hive Metastore.
+   - Helps organize and manage data in a structured manner.
+
+3. **Tables/Views**:
+   - **Tables**: Store actual data in a structured format (rows and columns).
+   - **Views**: Virtual tables created by querying one or more tables.
+
+### With Unity Catalog
+1. **Metastore**:
+   - The central repository for managing all data assets across multiple Databricks workspaces.
+   - Provides unified data governance and access control.
+
+2. **Hive Metastore (Catalog)**:
+   - Continues to function as a catalog but is now integrated within the broader Unity Catalog.
+   - Manages metadata for databases, schemas, tables, and views.
+
+3. **Database (Schema)**:
+   - Functions similarly to the previous setup, organizing tables and views within the metastore.
+
+4. **Tables/Views**:
+   - **Tables**: Same as before, storing structured data.
+   - **Views**: Virtual tables created from querying data in one or more tables.
+
+### Managed Table
+- **Managed Table**:
+  - Both data and metadata are managed by Databricks.
+  - Databricks handles the storage, maintenance, and optimization of these tables.
+
+### External Table
+- **External Table**:
+  - Data is managed by the customer (user).
+  - Metadata (information about the table structure, location, etc.) is managed by Databricks.
+  - Allows users to keep data in their preferred storage systems while still leveraging Databricks for metadata management and query optimization.
+
+### Summary
+- **Without Unity Catalog**: The Hive Metastore acts as the sole catalog for managing database schemas and tables/views.
+- **With Unity Catalog**: A more comprehensive data governance framework that includes the Hive Metastore, allowing for better data management, security, and access control across multiple Databricks environments.
+- **Managed Table**: Databricks handles both data and metadata.
+- **External Table**: Users manage the data, and Databricks manages the metadata.
 
 
 
