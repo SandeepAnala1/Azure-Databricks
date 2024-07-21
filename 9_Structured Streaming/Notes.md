@@ -132,3 +132,143 @@ Incremental loading is a powerful and efficient technique for data integration, 
 
 -------------------------------------------------------------
 
+## Scripting
+
+1. **Base Data Directory**:
+   ```python
+   base_data_dir="/mnt/devmadeadlssa/landing"
+   ```
+
+   This variable defines the base directory where the data files are stored.
+
+2. **Print Statements and Functions**:
+   ```python
+   print('Ashok')
+
+   name='My Name is Ashok'
+
+   def getName():
+       name='My Name is Ashok Kumar'
+       return (name)
+
+   myname=getName()
+
+   print(myname)
+   ```
+
+   These lines are simple print statements and functions to demonstrate basic Python functionality. They don't contribute to the incremental loading process.
+
+3. **Schema Definition**:
+   ```python
+   def getSchema():
+       return """InvoiceNumber string, CreatedTime bigint, StoreID string, PosID string, CashierID string,
+                CustomerType string, CustomerCardNo string, TotalAmount double, NumberOfItems bigint, 
+                PaymentMethod string, TaxableAmount double, CGST double, SGST double, CESS double, 
+                DeliveryType string,
+                DeliveryAddress struct<AddressLine string, City string, ContactNumber string, PinCode string, 
+                State string>,
+                InvoiceLineItems array<struct<ItemCode string, ItemDescription string, 
+                    ItemPrice double, ItemQty bigint, TotalValue double>>
+            """
+   ```
+
+   This function defines the schema of the invoice data. It describes the structure of the data that will be read from the source files.
+
+4. **Read Invoices Function**:
+   ```python
+   def readInvoices():
+       from pyspark.sql.functions import input_file_name
+       return (
+           spark.read.format("json")
+           .schema(getSchema())
+           .load(f"{base_data_dir}/streaming/invoices")
+           .withColumn("InputFile", input_file_name())
+       )
+   ```
+
+   This function reads invoice data from JSON files located in the specified directory. It uses the schema defined in the previous function and adds a column to capture the input file name.
+
+5. **Process Function**:
+   ```python
+   def process():
+       print(f"\nStarting Bronze Stream...", end="")
+       invoicesDF = readInvoices()
+       invoicesDF.write.mode("append").saveAsTable("invoices_bz1")
+       print("Done")
+   ```
+
+   This function initiates the reading of invoices and writes the data to a bronze table (`invoices_bz1`). The mode is set to "append," indicating that new data will be appended to the existing table.
+
+## Implementing Incremental Loading
+
+To implement incremental loading effectively, we need to ensure that we only load new or changed data since the last load. The following steps outline a more complete approach using watermarking or change data capture (CDC) concepts:
+
+1. **Create Watermark Table**:
+   - Maintain a table to track the `LastModifiedDate`.
+
+   ```python
+   # Assuming a Delta table is used for the watermark
+   spark.sql("""
+   CREATE TABLE IF NOT EXISTS watermark_table (
+       table_name STRING,
+       last_modified_date TIMESTAMP
+   )
+   """)
+   ```
+
+2. **Retrieve the Last Watermark Value**:
+   - Fetch the last loaded timestamp from the watermark table.
+
+   ```python
+   last_modified_date = spark.sql("""
+   SELECT last_modified_date
+   FROM watermark_table
+   WHERE table_name = 'invoices'
+   """).collect()[0]['last_modified_date']
+   ```
+
+3. **Read Invoices with Filter**:
+   - Use the retrieved watermark value to filter the source data.
+
+   ```python
+   from pyspark.sql.functions import col
+
+   def readInvoices():
+       from pyspark.sql.functions import input_file_name
+       return (
+           spark.read.format("json")
+           .schema(getSchema())
+           .load(f"{base_data_dir}/streaming/invoices")
+           .withColumn("InputFile", input_file_name())
+           .filter(col("CreatedTime") > last_modified_date)
+       )
+   ```
+
+4. **Process Function with Watermark Update**:
+   - Update the `process` function to include watermark handling.
+
+   ```python
+   def process():
+       print(f"\nStarting Bronze Stream...", end="")
+       invoicesDF = readInvoices()
+       invoicesDF.write.mode("append").saveAsTable("invoices_bz1")
+
+       # Update the watermark table with the current timestamp
+       current_time = spark.sql("SELECT MAX(CreatedTime) as current_time FROM invoices_bz1").collect()[0]['current_time']
+       spark.sql(f"""
+       UPDATE watermark_table
+       SET last_modified_date = '{current_time}'
+       WHERE table_name = 'invoices'
+       """)
+       
+       print("Done")
+   ```
+
+5. **Run the Process**:
+   - Execute the process function to perform the incremental load.
+
+   ```python
+   process()
+   ```
+
+By implementing these steps, you ensure that only new or modified records are loaded into the target table, thereby achieving efficient incremental loading.
