@@ -1,5 +1,5 @@
 
-# Incremental Loading
+# Incremental Loading in Batch processing
 
 Incremental loading is a technique used in data integration and data warehousing to update the target data store with only the changes (new, updated, or deleted records) that have occurred since the last data load. This method is efficient as it reduces the amount of data processed and transferred, making the ETL (Extract, Transform, Load) process faster and more resource-efficient.
 
@@ -272,3 +272,155 @@ To implement incremental loading effectively, we need to ensure that we only loa
    ```
 
 By implementing these steps, you ensure that only new or modified records are loaded into the target table, thereby achieving efficient incremental loading.
+
+------------------------------------------------------------------------------------------------------
+
+# Structured Streaming in Spark
+
+**Structured Streaming** is a scalable and fault-tolerant stream processing engine built on the Spark SQL engine. It enables developers to work with real-time data streams using the same APIs that are used for batch processing in Spark. This approach overcomes many drawbacks of batch processing incremental loads by providing continuous processing capabilities, which helps in low-latency and real-time data processing.
+
+## Structured Streaming Architecture
+
+![image](https://github.com/user-attachments/assets/fbfa2665-d3d0-46de-8e59-207eb2b7bfaf)
+
+1. **Streaming Source**: The process begins with a streaming source, which continuously produces data. This could be a directory (`.../data`), a Kafka topic, or another data stream source.
+
+2. **Streaming Query**: This component represents the query defined by the user to process the streaming data. The query specifies how the data should be read, transformed, and written.
+
+3. **Trigger Micro Batch**: Structured streaming operates in micro-batches, where it periodically triggers to process the new data that has arrived since the last trigger. Each trigger initiates a micro-batch.
+
+4. **Micro-Batch Input Data**: In each trigger, a micro-batch of data (`file1` in this case) is taken from the streaming source for processing.
+
+5. **Execution Plan**: The execution plan defines the operations that need to be performed on each micro-batch of data. This includes reading the data, applying transformations, and writing the results.
+
+6. **ReadStream**: This step reads the micro-batch of data (`file1`) from the streaming source.
+
+7. **Transform**: After reading the data, the next step is to apply the specified transformations. These transformations could include filtering, aggregation, joining with other data, etc.
+
+8. **WriteStream**: After the transformations are applied, the resulting data is written to the designated sink, which could be a file system, a database, or another storage system.
+
+9. **Checkpoint**: To ensure fault tolerance and recoverability, structured streaming maintains checkpoints. These checkpoints keep track of the progress of the streaming query so that, in case of a failure, the system can resume processing from the last checkpointed state.
+
+10. **Feedback Loop**: The dotted lines indicate the feedback loop from the checkpoint to the streaming query, ensuring that the state is managed and preserved across micro-batches.
+
+Overall, structured streaming breaks down the continuous stream of data into manageable micro-batches, applies the user-defined transformations, and ensures fault tolerance through checkpoints. This architecture provides a powerful and flexible framework for real-time data processing.
+
+## Key Features:
+- **Continuous Processing**: Processes data in real-time as it arrives.
+- **Fault Tolerance**: Automatically recovers from failures.
+- **Scalability**: Scales horizontally to handle large data volumes.
+- **Unified Batch and Stream Processing**: Uses the same API for batch and stream processing.
+- **Exactly-once Semantics**: Ensures that each record is processed exactly once.
+
+### Reading Data from ADLS in Structured Streaming
+
+To read data from Azure Data Lake Storage (ADLS), you need to mount the ADLS storage to Databricks. Here is the mounting code and the steps to read data from invoice text files (invoice1, invoice2, invoice3) located in ADLS.
+
+## Mounting ADLS to Databricks
+
+```python
+# Set up the configuration for the ADLS mount
+configs = {
+  "fs.azure.account.auth.type": "OAuth",
+  "fs.azure.account.oauth.provider.type": "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider",
+  "fs.azure.account.oauth2.client.id": "<application-id>",
+  "fs.azure.account.oauth2.client.secret": "<application-secret>",
+  "fs.azure.account.oauth2.client.endpoint": "https://login.microsoftonline.com/<directory-id>/oauth2/token"
+}
+
+# Mount the ADLS storage
+dbutils.fs.mount(
+  source = "abfss://<container-name>@<account-name>.dfs.core.windows.net/",
+  mount_point = "/mnt/adls",
+  extra_configs = configs
+)
+```
+
+Replace `<application-id>`, `<application-secret>`, `<directory-id>`, `<container-name>`, and `<account-name>` with your ADLS and Azure AD details.
+
+## Reading Data from Mounted ADLS
+
+```python
+# Define the schema for the invoice files
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+
+schema = StructType([
+    StructField("InvoiceID", StringType(), True),
+    StructField("CustomerID", StringType(), True),
+    StructField("InvoiceDate", StringType(), True),
+    StructField("TotalAmount", IntegerType(), True)
+])
+
+# Read data from the invoice text files
+input_path = "/mnt/adls/invoices/"
+invoice_stream = (
+    spark.readStream
+    .option("header", "true")
+    .schema(schema)
+    .csv(input_path)
+)
+```
+
+## Performing Aggregations
+
+```python
+from pyspark.sql.functions import window, sum
+
+# Aggregate the total amount by customer and windowed by 1 hour
+aggregated_stream = (
+    invoice_stream
+    .withWatermark("InvoiceDate", "1 hour")
+    .groupBy(
+        window(invoice_stream.InvoiceDate, "1 hour"),
+        invoice_stream.CustomerID
+    )
+    .agg(sum("TotalAmount").alias("TotalAmount"))
+)
+```
+
+## Writing the Aggregated Data
+
+You can write the aggregated stream to various sinks like console, file system, or databases.
+
+#### Writing to Console
+
+```python
+query = (
+    aggregated_stream
+    .writeStream
+    .outputMode("update")
+    .format("console")
+    .start()
+)
+query.awaitTermination()
+```
+
+#### Writing to a Parquet File
+
+```python
+output_path = "/mnt/adls/output/aggregated_invoices/"
+query = (
+    aggregated_stream
+    .writeStream
+    .outputMode("update")
+    .format("parquet")
+    .option("checkpointLocation", "/mnt/adls/checkpoints/aggregated_invoices")
+    .start(output_path)
+)
+query.awaitTermination()
+```
+
+#### Writing to a Delta Table
+
+```python
+output_path = "/mnt/adls/delta/aggregated_invoices/"
+query = (
+    aggregated_stream
+    .writeStream
+    .outputMode("update")
+    .format("delta")
+    .option("checkpointLocation", "/mnt/adls/checkpoints/aggregated_invoices")
+    .start(output_path)
+)
+query.awaitTermination()
+```
